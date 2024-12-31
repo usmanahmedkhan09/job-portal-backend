@@ -13,8 +13,9 @@ class UserResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    {
+        {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'roles' => $this->usersroles->map(function ($role) {
@@ -23,6 +24,13 @@ class UserResource extends JsonResource
                     'name' => $role->name,
                 ];
             }),
+            'permissions' => $this->userspermissions->map(function ($permission) {
+                return [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                ];
+            }),
+            'created_at' => $this->created_at,
         ];
     }
 }

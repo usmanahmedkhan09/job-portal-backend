@@ -24,14 +24,17 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('authToken')->plainTextToken;
 
+        $user->token = $token;
 
-        return $this->successResponse(['user' =>$user, 'token' => $token ], 'user successfully authenticated', 201);
+        return $this->successResponse(['user' =>$user], 'User Successfully Authenticated', 200);
     }
 
     // Logout function
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        if (Auth::user()) {
+            Auth::user()->tokens()->delete();
+        }
         return $this->successResponse([], 'Logged out successfully', 201);
     }
 

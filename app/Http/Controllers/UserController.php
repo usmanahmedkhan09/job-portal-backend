@@ -6,15 +6,16 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 use App\Models\User;
 use App\Http\Resources\UserResource;
+use App\Traits\FilterCriteria;
 
 class UserController extends Controller
 {
-        use ApiResponse;
+        use ApiResponse, FIlterCriteria;
         // Display a listing of the resource.
         public function index()
         {
-            $users = User::all();
-            return $this->successResponse(['user' => UserResource::collection($users)], null, 200);
+            $users = User::query()->filter()->simplePaginate(10);
+            return $this->successResponse(['users' => UserResource::collection($users)], 'success', 200);
         }
 
         // Store a newly created resource in storage.
@@ -68,6 +69,14 @@ class UserController extends Controller
             $user->save();
 
             return $this->successResponse(['user' => $user], 'User has been successfully Updated', 200);
+        }
+
+        public function edit($id){
+            $user = User::where('id', $id)->first();
+            if(! $user){
+                return $this->errorResponse('User not found', 404);
+            }
+            return $this->successResponse(['user' => $user], null, 200);
         }
 
         // Remove the specified resource from storage.
