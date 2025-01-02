@@ -15,7 +15,7 @@ class UserController extends Controller
         public function index()
         {
             $users = User::query()->filter()->simplePaginate(10);
-            return $this->successResponse(['users' => UserResource::collection($users)], 'success', 200);
+            return $this->successResponse(['users' => UserResource::collection($users)], null, 200);
         }
 
         // Store a newly created resource in storage.

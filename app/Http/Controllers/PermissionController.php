@@ -4,19 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use App\Http\Resources\PermissionResource;
+use App\Traits\FilterCriteria;
 
 class PermissionController extends Controller
 {
-    
-
-    use ApiResponse;
+    use ApiResponse, FilterCriteria;
 
     // Display a listing of permissions
     public function index()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::query()->filter()->simplePaginate(10);
         return $this->successResponse(['permissions' => PermissionResource::collection($permissions)], null, 200);
     }
 

@@ -35,7 +35,7 @@ class AuthController extends Controller
         if (Auth::user()) {
             Auth::user()->tokens()->delete();
         }
-        return $this->successResponse([], 'Logged out successfully', 201);
+        return $this->successResponse([], null, 201);
     }
 
     public function store(Request $request)
