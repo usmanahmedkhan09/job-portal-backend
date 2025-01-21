@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\JobPostingRequest;
 use App\Models\JobPosting;
 use Illuminate\Http\Request;
-
+use App\Traits\ApiResponse;
 class JobPostingController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of job postings.
      *
@@ -18,9 +19,9 @@ class JobPostingController extends Controller
     {
         try {
             $jobPostings = JobPosting::filter($request->all())->paginate($request->get('limit', 10));
-            return response()->json($jobPostings);
+            return $this->successResponse(['jobPostings' => $jobPostings], null, 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error retrieving job postings', 'error' => $e->getMessage()], 500);
+            return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);
         }
     }
 
@@ -36,9 +37,9 @@ class JobPostingController extends Controller
             $validated = $request->validated();
 
             $jobPosting = JobPosting::create($validated);
-            return response()->json($jobPosting, 201);
+            return $this->successResponse(['jobPostings' => $jobPosting], null, 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error creating job posting', 'error' => $e->getMessage()], 500);
+            return $this->errorResponse('Error creating job posting', $e->getMessage(), 500);
         }
     }
 
@@ -52,9 +53,9 @@ class JobPostingController extends Controller
     {
         try {
             $jobPosting = JobPosting::findOrFail($id);
-            return response()->json($jobPosting);
+            return $this->successResponse(['jobPostings' => $jobPosting], null, 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Job posting not found', 'error' => $e->getMessage()], 404);
+            return $this->errorResponse('Job posting not found', $e->getMessage(), 404);
         }
     }
 
@@ -80,9 +81,9 @@ class JobPostingController extends Controller
             ]);
 
             $jobPosting->update($validated);
-            return response()->json($jobPosting);
+            return $this->successResponse(['jobPostings' => $jobPosting], null, 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error updating job posting', 'error' => $e->getMessage()], 500);
+            return $this->errorResponse('Error updating job posting', $e->getMessage(), 500);
         }
     }
 
@@ -97,9 +98,9 @@ class JobPostingController extends Controller
         try {
             $jobPosting = JobPosting::findOrFail($id);
             $jobPosting->delete();
-            return response()->json(['message' => 'Job posting deleted successfully']);
+            return $this->successResponse(['jobPostings' => $jobPosting], 'Job posting deleted successfully', 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error deleting job posting', 'error' => $e->getMessage()], 500);
+            return $this->errorResponse('Error deleting job posting', $e->getMessage(), 500);
         }
     }
 }
