@@ -40,7 +40,7 @@ class PermissionController extends Controller
         if (!$permission) {
             return $this->errorResponse('Permission not found', 404);
         }
-        return $this->successResponse(['permission' => $permission], 'Permission found', 200);
+        return $this->successResponse(['permission' => $permission], null, 200);
     }
 
     // Update the specified permission

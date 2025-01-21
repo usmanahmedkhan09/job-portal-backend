@@ -3,6 +3,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JobCategoriesController;
+use App\Http\Controllers\JobPostingController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -17,7 +19,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('permissions', PermissionController::class);
-    // Route::post('/user', [UserController::class, 'index']);
-    // Route::get('/roles', [RoleController::class, 'index']);
-    // Route::get('/permissions', [PermissionController::class, 'index']);
+    Route::resource('jobs', JobPostingController::class);
+    Route::resource('/roles', RoleController::class);
+    Route::resource('job-categories', JobCategoriesController::class);
 });

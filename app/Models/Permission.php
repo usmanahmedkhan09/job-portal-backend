@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Enums\FilterTypes;
 use App\Traits\FilterCriteria;
-
-class Permission extends \Spatie\Permission\Models\Permission
+use \Spatie\Permission\Models\Permission as BasePermission;
+class Permission extends BasePermission
 {
     use FilterCriteria;
 

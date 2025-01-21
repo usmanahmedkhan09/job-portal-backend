@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\ApiResponse;
+use App\Enums\PermissionsEnum;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -21,12 +23,13 @@ class AuthController extends Controller
             return $this->errorResponse('Login failed!', 'Unauthorized', 401);
         }
 
-        $user = Auth::user();
+        $user = Auth::user()->load('roles', 'permissions');
+        // dd($user->getAllPermissions());
         $token = $user->createToken('authToken')->plainTextToken;
 
         $user->token = $token;
 
-        return $this->successResponse(['user' =>$user], 'User Successfully Authenticated', 200);
+        return $this->successResponse(['user' => new UserResource($user), 'permissionsEnum' => PermissionsEnum::getAllPermissions()], 'User Successfully Authenticated', 200);
     }
 
     // Logout function
@@ -34,8 +37,10 @@ class AuthController extends Controller
     {
         if (Auth::user()) {
             Auth::user()->tokens()->delete();
+            return $this->successResponse([], null, 201);
+        }else {
+            return $this->errorResponse('User not authenticated', 'Unauthorized', 401);
         }
-        return $this->successResponse([], null, 201);
     }
 
     public function store(Request $request)

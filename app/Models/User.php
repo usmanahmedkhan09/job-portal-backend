@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\FilterCriteria;
 
@@ -18,6 +17,12 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasRoles, FilterCriteria;
 
+    /**
+     * The guard name used for the model.
+     *
+     * @var string
+     */
+    protected $guard_name = 'sanctum';
     /**
      * The attributes that are mass assignable.
      *

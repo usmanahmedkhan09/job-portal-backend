@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 use App\Models\User;
 use App\Http\Resources\UserResource;
+use App\Models\Permission;
 use App\Traits\FilterCriteria;
 
 class UserController extends Controller
@@ -14,7 +15,7 @@ class UserController extends Controller
         // Display a listing of the resource.
         public function index()
         {
-            $users = User::query()->filter()->simplePaginate(10);
+            $users = User::query()->with('permissions')->with('roles')->filter()->simplePaginate(10);
             return $this->successResponse(['users' => UserResource::collection($users)], null, 200);
         }
 
@@ -33,6 +34,8 @@ class UserController extends Controller
                 'password' => bcrypt($request->get('password')),
             ]);
 
+            $user->assignRole($request->roles);
+            $user->givePermissionTo($request->permissions);
             $user->save();
 
             return $this->successResponse(['user' => $user], 'User has been added', 201);
@@ -66,17 +69,21 @@ class UserController extends Controller
             if ($request->get('password')) {
                 $user->password = bcrypt($request->get('password'));
             }
-            $user->save();
 
-            return $this->successResponse(['user' => $user], 'User has been successfully Updated', 200);
+            $user->syncRoles($request->roles);
+            $user->syncPermissions($request->permissions);
+            $user->save();
+            $user->load(['permissions', 'roles']);
+
+            return $this->successResponse(['user' => new UserResource($user)], 'User has been successfully Updated', 200);
         }
 
         public function edit($id){
-            $user = User::where('id', $id)->first();
+            $user = User::with('permissions')->with('roles')->where('id', $id)->first();
             if(! $user){
                 return $this->errorResponse('User not found', 404);
             }
-            return $this->successResponse(['user' => $user], null, 200);
+            return $this->successResponse(['user' => new UserResource($user)], null, 200);
         }
 
         // Remove the specified resource from storage.

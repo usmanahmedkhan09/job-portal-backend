@@ -15,13 +15,14 @@ class RoleResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
-            // 'roles' => $this->rolesPermission->map(function ($permission) {
-            //     return [
-            //         'id' => $permission->id,
-            //         'name' => $permission->name,
-            //     ];
-            // }),
+            'permissions' => $this->permissions->map(function ($permission) {
+                return [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                ];
+            }),
         ];
     }
 }
