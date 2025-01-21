@@ -77,4 +77,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'model_has_permissions', 'model_id');
     }
 
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'user_skills')
+                    ->withPivot('proficiency_level')
+                    ->withTimestamps();
+    }
+
 }

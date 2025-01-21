@@ -9,6 +9,8 @@ use App\Traits\FilterCriteria;
 class JobCategory extends Model
 {
     use FilterCriteria;
+
+    protected $fillable = ['name'];
        /**
      * The table associated with the model.
      *
@@ -23,4 +25,9 @@ class JobCategory extends Model
     public $filterables = [
         'name' => FilterTypes::LIKE,
     ];
+
+    function skills() 
+    {
+        return $this->hasMany(Skill::class, 'category_id');
+    }
 }
