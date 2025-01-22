@@ -24,6 +24,7 @@ trait ApiResponse
      */
     protected function errorResponse($message = 'Operation failed', $errors = null, $statusCode = 400)
     {
+        
         return new ApiResponseResource([
             'success' => false,
             'status_code' => $statusCode,

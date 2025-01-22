@@ -20,7 +20,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('permissions', PermissionController::class);
-    Route::resource('/jobs', JobPostingController::class);
+    Route::resource('jobs', JobPostingController::class);
     Route::resource('/roles', RoleController::class);
     Route::resource('job-categories', JobCategoriesController::class);
     Route::resource('/skills', SkillController::class);

@@ -11,6 +11,14 @@ class JobPosting extends Model
 {
     use FilterCriteria;
 
+        /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<string>|bool
+     */
+    protected $guarded = [];
+
+    // public $fillable = ['title', 'description', 'requirements', 'salary_range', 'location', 'status'];
       /**
      * The table associated with the model.
      *
