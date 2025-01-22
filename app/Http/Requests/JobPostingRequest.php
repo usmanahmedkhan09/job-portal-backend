@@ -28,7 +28,9 @@ class JobPostingRequest extends FormRequest
             'requirements' => 'required|string',
             'salary_range' => 'required|string',
             'location' => 'required|string',
-            'status' => 'required|string'
+            'status' => 'required|string',
+            'skills' => 'required|array',
+            'category_id' => 'required'
         ];
     }
 }

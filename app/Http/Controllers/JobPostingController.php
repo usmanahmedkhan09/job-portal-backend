@@ -38,10 +38,22 @@ class JobPostingController extends Controller
         try {
             $validated = $request->validated();
 
-            $jobPosting = JobPosting::create($validated);
+            $jobPosting = JobPosting::create($request->except('skills'));
+            $jobPosting->skills()->attach($request->skills);
+
             return $this->successResponse(['jobPostings' => $jobPosting], null, 201);
         } catch (\Exception $e) {
             return $this->errorResponse('Error creating job posting', $e->getMessage(), 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $jobPosting = JobPosting::with(['skills', 'user', 'category'])->findOrFail($id);
+            return $this->successResponse(['job' => $jobPosting], null, 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Job posting not found', $e->getMessage(), 404);
         }
     }
 
@@ -85,7 +97,8 @@ class JobPostingController extends Controller
             ]);
 
             $jobPosting->update($validated);
-            return $this->successResponse(['jobPostings' => $jobPosting], null, 200);
+            $jobPosting->skills()->sync([1, 2]);
+            return $this->successResponse(['jobPostings' => $jobPosting], 'Job updated successfully', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error updating job posting', $e->getMessage(), 500);
         }
@@ -108,13 +121,5 @@ class JobPostingController extends Controller
         }
     }
 
-    // public function edit($id)
-    // {
-    //     try {
-    //         $jobPosting = JobPosting::findOrFail($id);
-    //         return $this->successResponse(['job' => $jobPosting], null, 200);
-    //     } catch (\Exception $e) {
-    //         return $this->errorResponse('Job posting not found', $e->getMessage(), 404);
-    //     }
-    // }
+  
 }

@@ -41,7 +41,12 @@ class JobPosting extends Model
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class, 'job_posting_skills');
+        return $this->belongsToMany(Skill::class, 'job_skills', 'job_id', 'skill_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(JobCategory::class);
     }
 
 }

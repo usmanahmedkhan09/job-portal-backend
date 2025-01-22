@@ -26,8 +26,14 @@ class JobCategory extends Model
         'name' => FilterTypes::LIKE,
     ];
 
-    function skills() 
+    public function skills() 
     {
         return $this->hasMany(Skill::class, 'category_id');
     }
+
+    public function jobPostings() 
+    {
+        return $this->hasMany(JobPosting::class);
+    }
+    
 }
