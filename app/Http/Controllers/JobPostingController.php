@@ -54,8 +54,10 @@ class JobPostingController extends Controller
     public function show($id)
     {
         try {
-            $jobPosting = JobPosting::findOrFail($id);
-            return $this->successResponse(['jobPostings' => $jobPosting], null, 200);
+            $jobPosting = JobPosting::findOrFail($id)->with(['user' => function ($query) {
+                $query->select('id', 'name'); // Specify the columns you want
+            }], 'skills')->get();
+            return $this->successResponse(['job' => $jobPosting], null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Job posting not found', $e->getMessage(), 404);
         }
@@ -105,4 +107,14 @@ class JobPostingController extends Controller
             return $this->errorResponse('Error deleting job posting', $e->getMessage(), 500);
         }
     }
+
+    // public function edit($id)
+    // {
+    //     try {
+    //         $jobPosting = JobPosting::findOrFail($id);
+    //         return $this->successResponse(['job' => $jobPosting], null, 200);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse('Job posting not found', $e->getMessage(), 404);
+    //     }
+    // }
 }

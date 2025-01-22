@@ -17,19 +17,25 @@ class AuthController extends Controller
     // Login function
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        try {
+            $credentials = $request->only('email', 'password');
 
-        if (!Auth::attempt($credentials)) {
-            return $this->errorResponse('Login failed!', 'Unauthorized', 401);
+            if (!Auth::attempt($credentials)) {
+                return $this->errorResponse('Login failed!', 'Unauthorized', 401);
+            }
+    
+            $user = Auth::user()->load('roles', 'permissions');
+            // dd($user->getAllPermissions());
+            $token = $user->createToken('authToken')->plainTextToken;
+    
+            $user->token = $token;
+    
+            return $this->successResponse(['user' => new UserResource($user), 'permissionsEnum' => PermissionsEnum::getAllPermissions()], 'User Successfully Authenticated', 200);
+          
+        } catch (\Exception $e) {
+            return $this->errorResponse('Validation Error', $e->getMessage(), 422);
         }
-
-        $user = Auth::user()->load('roles', 'permissions');
-        // dd($user->getAllPermissions());
-        $token = $user->createToken('authToken')->plainTextToken;
-
-        $user->token = $token;
-
-        return $this->successResponse(['user' => new UserResource($user), 'permissionsEnum' => PermissionsEnum::getAllPermissions()], 'User Successfully Authenticated', 200);
+      
     }
 
     // Logout function
