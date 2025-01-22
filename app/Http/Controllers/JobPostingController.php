@@ -18,8 +18,10 @@ class JobPostingController extends Controller
     public function index(Request $request)
     {
         try {
-            $jobPostings = JobPosting::filter($request->all())->paginate($request->get('limit', 10));
-            return $this->successResponse(['jobPostings' => $jobPostings], null, 200);
+            $jobPostings = JobPosting::filter($request->all()) ->with(['user' => function ($query) {
+                $query->select('id', 'name'); // Specify the columns you want
+            }])->paginate($request->get('limit', 10));
+            return $this->successResponse($jobPostings, null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);
         }

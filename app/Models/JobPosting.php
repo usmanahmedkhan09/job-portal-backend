@@ -33,4 +33,10 @@ class JobPosting extends Model
     public $filterables = [
         'name' => FilterTypes::LIKE,
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

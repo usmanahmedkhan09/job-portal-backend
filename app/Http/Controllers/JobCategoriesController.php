@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\JobCategory;
 use Illuminate\Http\Request;
-
+use App\Traits\ApiResponse;
 class JobCategoriesController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of job categories.
      */
@@ -14,13 +15,8 @@ class JobCategoriesController extends Controller
     {
         try {
             $jobCategories = JobCategory::select('id', 'name')->get();
-            return response()->json([
-                'success' => true,
-                'statusCode' => 200,
-                'data' => [
-                    'jobCategories' => $jobCategories
-                ]
-            ]);
+
+            return $this->successResponse(['jobCategories' => $jobCategories], null, 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
