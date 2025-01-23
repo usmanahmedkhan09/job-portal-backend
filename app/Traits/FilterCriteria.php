@@ -3,6 +3,9 @@
 namespace App\Traits;
 
 use App\Enums\FilterTypes;
+use Illuminate\Support\Facades\Log;
+
+use function Illuminate\Log\log;
 
 trait FilterCriteria
 {
@@ -13,6 +16,7 @@ trait FilterCriteria
         if(count($filters) && isset($this->filterables) && count($this->filterables))
         foreach ($this->filterables as $key => $operator) {
             $value = request()->{$key};
+            if (!empty($value)) {
                 switch($operator){
                     case FilterTypes::LIKE:
                         $query->where($key, 'like', "%{$value}%");
@@ -57,10 +61,10 @@ trait FilterCriteria
                         $query->whereDate($key, $value);
                         break;
                     default:
-                        $query->where($key, $value);
+                        break;
                 }
             }
-
+        }
         return $query;
     }
 }

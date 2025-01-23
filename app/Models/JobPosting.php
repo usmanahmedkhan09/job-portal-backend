@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\FilterTypes;
 use App\Traits\FilterCriteria;
-
 use Illuminate\Database\Eloquent\Model;
 
 class JobPosting extends Model
@@ -31,7 +30,15 @@ class JobPosting extends Model
      * @var array<int, string>
      */
     public $filterables = [
-        'name' => FilterTypes::LIKE,
+        'title' => FilterTypes::LIKE,
+        'category_id' => FilterTypes::EQ,
+        'location' => FilterTypes::LIKE,
+        'status' => FilterTypes::EQ,
+        // 'skills' => FilterTypes::IN,
+        'salary_range' => FilterTypes::LIKE,
+        'created_at' => FilterTypes::DATE,
+        'updated_at' => FilterTypes::DATE,
+        'job_type' => FilterTypes::EQ,
     ];
 
     public function user()

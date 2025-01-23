@@ -18,9 +18,11 @@ class JobPostingController extends Controller
     public function index(Request $request)
     {
         try {
-            $jobPostings = JobPosting::filter($request->all()) ->with(['user' => function ($query) {
+            $jobPostings = JobPosting::filter() ->with(['user' => function ($query) {
                 $query->select('id', 'name'); // Specify the columns you want
-            }])->paginate($request->get('limit', 10));
+            }], 'skills')->simplePaginate()->withQueryString();
+
+            // dd( JobPosting::filter()->get());
             return $this->successResponse($jobPostings, null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);
@@ -82,22 +84,14 @@ class JobPostingController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(JobPostingRequest $request, $id)
     {
         try {
             $jobPosting = JobPosting::findOrFail($id);
-            
-            $validated = $request->validate([
-                'title' => 'string|max:255',
-                'description' => 'string',
-                'requirements' => 'string',
-                'salary_range' => 'string',
-                'location' => 'string',
-                'status' => 'string'
-            ]);
+            $validated = $request->validated();
 
-            $jobPosting->update($validated);
-            $jobPosting->skills()->sync([1, 2]);
+            $jobPosting->update($request->except('skills'));
+            $jobPosting->skills()->sync($request->skills);
             return $this->successResponse(['jobPostings' => $jobPosting], 'Job updated successfully', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error updating job posting', $e->getMessage(), 500);
