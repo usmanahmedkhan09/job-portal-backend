@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\FilterTypes;
 use App\Traits\FilterCriteria;
 use Illuminate\Database\Eloquent\Model;
-
 class JobPosting extends Model
 {
     use FilterCriteria;
@@ -54,6 +53,11 @@ class JobPosting extends Model
     public function category()
     {
         return $this->belongsTo(JobCategory::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(JobsApplication::class, 'job_id');
     }
 
 }

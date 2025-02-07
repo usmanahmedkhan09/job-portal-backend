@@ -84,4 +84,9 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
+    public function jobApplications()
+    {
+        return $this->hasMany(JobsApplication::class, 'user_id');
+    }
+
 }

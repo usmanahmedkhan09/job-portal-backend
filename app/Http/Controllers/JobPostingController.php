@@ -6,6 +6,8 @@ use App\Http\Requests\JobPostingRequest;
 use App\Models\JobPosting;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Log;
+
 class JobPostingController extends Controller
 {
     use ApiResponse;
@@ -20,15 +22,27 @@ class JobPostingController extends Controller
         try {
             $jobPostings = JobPosting::filter() ->with(['user' => function ($query) {
                 $query->select('id', 'name'); // Specify the columns you want
-            }], 'skills')->simplePaginate()->withQueryString();
-
-            // dd( JobPosting::filter()->get());
+            }], 'skills') ->orderBy('created_at', 'desc') ->get();
+            
             return $this->successResponse($jobPostings, null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);
         }
     }
 
+    public function getJobByUser(Request $request)
+    {
+        try {
+            $jobPostings = JobPosting::filter()->where('user_id', auth()->user()->id)->with(['user' => function ($query) {
+                $query->select('id', 'name'); // Specify the columns you want
+            }], 'skills')->simplePaginate(10);
+
+            Log::info('Job postings retrieved successfully', ['jobPostings' => $jobPostings]);
+            return $this->successResponse($jobPostings, null, 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);
+        }
+    }
     /**
      * Store a newly created job posting.
      *

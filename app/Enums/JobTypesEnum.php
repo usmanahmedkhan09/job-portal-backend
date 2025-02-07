@@ -8,6 +8,11 @@ enum JobTypesEnum: string
     case PART_TIME = 'part-time';
     case REMOTE = 'remote';
     case CONTRACT = 'contract';
+    case INTERNSHIP = 'internship';
+    case TEMPORARY = 'temporary';
+    case VOLUNTEER = 'volunteer';
+    case FREELANCE = 'freelance';
+    case HYBRID = 'hybrid';
 
     public function label(): string
     {
@@ -16,6 +21,12 @@ enum JobTypesEnum: string
             self::PART_TIME => 'part-time',
             self::REMOTE => 'remote',
             self::CONTRACT => 'contract',
+            self::INTERNSHIP => 'internship',
+            self::TEMPORARY => 'temporary',
+            self::VOLUNTEER => 'volunteer',
+            self::FREELANCE => 'freelance',
+            self::HYBRID => 'hybrid',
+            
         };
     }
 }

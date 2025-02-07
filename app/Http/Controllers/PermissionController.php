@@ -13,9 +13,10 @@ class PermissionController extends Controller
     use ApiResponse, FilterCriteria;
 
     // Display a listing of permissions
-    public function index()
-    {
-        $permissions = Permission::query()->filter()->simplePaginate(10);
+    public function index(Request $request)
+    {   
+        $paginate = $request->boolean('paginate') ? true : false;
+        $permissions = $paginate ? Permission::query()->filter()->simplePaginate(10) : Permission::all();
         return $this->successResponse(['permissions' => PermissionResource::collection($permissions)], null, 200);
     }
 
