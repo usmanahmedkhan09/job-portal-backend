@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobPostingRequest;
 use App\Models\JobPosting;
+use App\Models\jobSearchHistory;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class JobPostingController extends Controller
 {
@@ -23,7 +25,7 @@ class JobPostingController extends Controller
             $jobPostings = JobPosting::filter() ->with(['user' => function ($query) {
                 $query->select('id', 'name'); // Specify the columns you want
             }], 'skills') ->orderBy('created_at', 'desc') ->get();
-            
+
             return $this->successResponse($jobPostings, null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);

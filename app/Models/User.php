@@ -89,4 +89,9 @@ class User extends Authenticatable
         return $this->hasMany(JobsApplication::class, 'user_id');
     }
 
+    public function jobSearchHistory()
+    {
+        return $this->hasMany(JobSearchHistory::class, 'user_id');
+    }
+
 }
