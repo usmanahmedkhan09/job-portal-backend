@@ -24,15 +24,11 @@ class UserResource extends JsonResource
                     'name' => $role->name,
                 ];
             }),
-            'permissions' => $this->userspermissions->map(function ($permission) {
-                return [
-                    'id' => $permission->id,
-                    'name' => $permission->name,
-                ];
-            }),
+            'permissions' => $this->permissions,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'token' => $this->token ?? null,
+            'company_id' => $this->company_id,
         ];
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\UserController;
 use App\Models\JobsApplication;
 use App\Http\Controllers\CompaniesController;
+use App\Http\Controllers\CompanyController;
 
 Route::post('/signup', [AuthController::class, 'store']);
 // Login route
@@ -25,11 +26,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('jobs', JobPostingController::class);
-    Route::get('/get-job-by-user', [JobPostingController::class, 'getJobByUser']);
+    Route::get('/get-jobs', [JobPostingController::class, 'getJobs']);
     Route::resource('/roles', RoleController::class);
     Route::resource('job-categories', JobCategoriesController::class);
     Route::resource('/skills', SkillController::class);
     Route::resource('/jobs-applications', JobsApplicationController::class);
     Route::get('/get-skill-by-category/{id}', [SkillController::class, 'getSkillsByCategory']);
-    Route::resource('/companies', CompaniesController::class);
+    Route::resource('/companies', CompanyController::class);
+    Route::get('/get-users-by-companyId/{id}', [UserController::class, 'getUsersByCompanyId']);
+    Route::post('/create-company-user', [UserController::class, 'createUserAgainstCompany']);
 });

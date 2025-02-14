@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 use App\Models\User;
 use App\Http\Resources\UserResource;
+use App\Models\Company;
 use App\Models\Permission;
 use App\Traits\FilterCriteria;
 
@@ -26,12 +27,22 @@ class UserController extends Controller
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:6',
+                'company_name' => 'required|unique:companies,name',
+                'company_website' => 'required',
+                'company_description' => 'required',
             ]);
 
+            $company = Company::create([
+                'name' => $request->get('company_name'),
+                'website' => $request->get('company_website'),
+                'description' => $request->get('company_description'),
+            ]);
+ 
             $user = new User([
                 'name' => $request->get('name'),
                 'email' => $request->get('email'),
                 'password' => bcrypt($request->get('password')),
+                'company_id' => $company->id,
             ]);
 
             $user->assignRole($request->roles);
@@ -96,5 +107,32 @@ class UserController extends Controller
             $user->delete();
 
             return $this->successResponse(['user' => $user], 'User has been successfully deleted', 200);;
+        }
+
+        public function createUserAgainstCompany(Request $request){
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
+                'company_id' => 'required|exists:companies,id'
+            ]);
+
+            $user = new User([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'password' => bcrypt($request->get('password')),
+                'company_id' => $request->get('company_id'),
+            ]);
+
+            $user->assignRole($request->role ?? 'employee');
+            
+            $user->save();
+
+            return $this->successResponse(['user' => $user], 'User has been added', 201);
+        }
+
+        public function getUsersByCompanyId($id){
+            $users = User::where('company_id', $id)->with(['company', 'roles'])->get();
+            return $this->successResponse(['users' => $users], null, 200);
         }
 }

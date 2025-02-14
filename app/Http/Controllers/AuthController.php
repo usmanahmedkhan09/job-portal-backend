@@ -24,8 +24,18 @@ class AuthController extends Controller
                 return $this->errorResponse('Login failed!', 'Unauthorized', 401);
             }
     
-            $user = Auth::user()->load('roles', 'permissions');
-            // dd($user->getAllPermissions());
+            $user = Auth::user()->load('roles', 'company');
+            
+            // Retrieve permissions directly assigned to the user
+            $directPermissions = $user->permissions->pluck('name')->toArray();
+
+            // Retrieve permissions assigned via roles
+            $rolePermissions = $user->getPermissionsViaRoles()->pluck('name')->toArray();
+
+            // Merge direct permissions with role permissions
+            $permissions = array_unique(array_merge($directPermissions, $rolePermissions));
+            $user->permissions = $permissions;
+
             $token = $user->createToken('authToken')->plainTextToken;
     
             $user->token = $token;

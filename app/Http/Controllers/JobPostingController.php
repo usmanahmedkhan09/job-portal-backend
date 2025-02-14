@@ -7,6 +7,7 @@ use App\Models\JobPosting;
 use App\Models\jobSearchHistory;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -25,21 +26,26 @@ class JobPostingController extends Controller
             $jobPostings = JobPosting::filter() ->with(['user' => function ($query) {
                 $query->select('id', 'name'); // Specify the columns you want
             }], 'skills') ->orderBy('created_at', 'desc') ->get();
-
+            
             return $this->successResponse($jobPostings, null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);
         }
     }
 
-    public function getJobByUser(Request $request)
+    public function getJobs(Request $request)
     {
         try {
-            $jobPostings = JobPosting::filter()->where('user_id', auth()->user()->id)->with(['user' => function ($query) {
+            $query = JobPosting::filter()->with(['user' => function ($query) {
                 $query->select('id', 'name'); // Specify the columns you want
-            }], 'skills')->simplePaginate(10);
+            }], 'skills');
 
-            Log::info('Job postings retrieved successfully', ['jobPostings' => $jobPostings]);
+            if (!auth()->user()->roles->contains('name', 'admin')) {
+                $query->where('user_id', auth()->user()->id);
+            }
+
+            $jobPostings = $query->simplePaginate(10)->withQueryString();
+
             return $this->successResponse($jobPostings, null, 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Error retrieving job postings', $e->getMessage(), 500);

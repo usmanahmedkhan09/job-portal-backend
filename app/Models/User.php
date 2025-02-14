@@ -32,6 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'company_id',
     ];
 
     /**
@@ -92,6 +93,11 @@ class User extends Authenticatable
     public function jobSearchHistory()
     {
         return $this->hasMany(JobSearchHistory::class, 'user_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
 }
