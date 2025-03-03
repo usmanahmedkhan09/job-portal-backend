@@ -27,6 +27,8 @@ enum PermissionsEnum: string
     case JOB_DELETE = 'job-delete';
     case JOBS_APPLICATION_LIST = 'jobs-application-list';
     case JOBS_CATEGORIES_LIST = 'jobs-categories-list';
+    case COMPANIES_LIST = 'companies-list';
+    case COMPANIES_APPLICATION_LIST = 'companies-application-list';
 
 
     public static function getAllPermissions(): array
