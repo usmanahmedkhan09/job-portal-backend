@@ -3,7 +3,8 @@ FROM php:8.2-cli
 # Install dependencies and extensions
 RUN apt-get update && apt-get install -y \
     git unzip curl libpng-dev libonig-dev libxml2-dev libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && docker-php-ext-enable pdo_mysql  # <== Ensure PDO MySQL is enabled
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
