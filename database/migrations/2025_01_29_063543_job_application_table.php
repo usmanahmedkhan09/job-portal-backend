@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_applications', function (Blueprint $table) {
-            $table->foreignId('job_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('resume');
-            $table->text('cover_letter');
-            $table->enum('application_status', ['submitted', 'shortlisted', 'rejected', 'hired'])->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('job_applications', function (Blueprint $table) {
+        //     $table->foreignId('job_id')->constrained()->onDelete('cascade');
+        //     $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        //     $table->string('resume');
+        //     $table->text('cover_letter');
+        //     $table->enum('application_status', ['submitted', 'shortlisted', 'rejected', 'hired'])->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

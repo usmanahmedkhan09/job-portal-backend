@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('skills', function (Blueprint $table) {
-            $table->foreignId('category_id')->nullable()->constrained('job_categories')->onDelete('set null');
-        });
+        // Schema::table('skills', function (Blueprint $table) {
+        //     $table->foreignId('category_id')->nullable()->constrained('job_categories')->onDelete('set null');
+        // });
     }
 
     /**
