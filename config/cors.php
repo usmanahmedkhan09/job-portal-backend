@@ -15,11 +15,11 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'api/sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'api/sanctum/csrf-cookie', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://careerhubpk.netlify.app', 'http://localhost:3000', '*'],
 
     'allowed_origins_patterns' => [],
 
